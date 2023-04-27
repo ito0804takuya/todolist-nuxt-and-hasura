@@ -1,0 +1,28 @@
+# このymlの書き方のバージョン
+version: '3.7'
+
+services:
+  nuxt:
+    container_name: nuxt
+    # ビルド位置 (Dockerfile位置)
+    build: ./packages/nuxt
+    volumes:
+      # cached: volumeマウントを高速化
+      - ./packages/nuxt:/src:cached
+      # node_modulesはホスト→コンテナに反映されて欲しくないため、[Volume Trick]を使って隔離する
+      - nuxt_node_modules:/src/node_modules
+    ports:
+      # コンテナ : ホスト
+      - '3000:3000'
+    # 起動後、コンテナを存続させるためにフォアグラウンドプロセスを用意する
+    tty: true
+    environment:
+      - HOST=0.0.0.0
+      - port=3000
+      # ホットリロードを有効化
+      - CHOKIDAR_USEPOLLING=true
+    # Nuxt起動
+    command: sh -c "yarn && yarn dev"
+
+volumes:
+  nuxt_node_modules:
