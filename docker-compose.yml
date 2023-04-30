@@ -69,7 +69,9 @@ services:
       - nuxt_node_modules:/src/node_modules
     ports:
       # コンテナ : ホスト
-      - '3000:3000'
+      - 3000:3000
+      # hmr(ホットリロード)用のポート
+      - 24678:24678
     # 起動後、コンテナを存続させるためにフォアグラウンドプロセスを用意する
     tty: true
     environment:
